@@ -6,10 +6,12 @@ class Form {
   public $marksInput;    
   public $marksArray = [];
   public $phone_no;
+  // constructor
   public function __construct() {
     if (empty($_POST['fname'])) {
       echo "Enter First Name<br>";
     }
+    // 
     elseif (!preg_match('/^[a-zA-Z]+$/', $_POST['fname'])) {
       echo "First name can only contain letters!<br>";
     }
