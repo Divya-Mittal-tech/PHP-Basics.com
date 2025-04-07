@@ -7,22 +7,24 @@ class Form {
   public $marksInput;    
   public $marksArray = [];
   public $phone_no;
+  public $content;
+  public $file_name;
   public function __construct() {
     if (empty($_POST['fname'])) {
-      echo "Enter First Name<br>";
+      $this->content .= '<p style="color: red;">Enter First Name</p>';
     }
     elseif (!preg_match('/^[a-zA-Z]+$/', $_POST['fname'])) {
-      echo "First name can only contain letters!<br>";
+      $this->content .= '<p style="color: red;">First name can only contain letters!</p>';
     }
     else {
       $this->fname = $this->testInput($_POST['fname']);
     }
 
     if (empty($_POST['lname'])) {
-      echo "Enter Last Name<br>";
+      $this->content .= '<p style="color: red;">Enter Last Name</p>';
     }
     elseif (!preg_match('/^[a-zA-Z]+$/', $_POST['lname'])) {
-      echo "Last name can only contain letters!<br>";
+      $this->content .= '<p style="color: red;">Last name can only contain letters!</p>';
     }
     else {
       // Initialize last name after data cleaning.
@@ -31,7 +33,7 @@ class Form {
 
     if (!empty($this->fname) && !empty($this->lname)) {
       $this->fullname = $this->fname . ' ' . $this->lname;
-      echo '<h1>Hello ' . $this->fullname . '!</h1><br>';
+      $this->content .= '<h1>Hello ' . $this->full_name . '!</h1>';
     }
   }
   public function testInput($data) {
@@ -55,17 +57,20 @@ class Form {
 
           $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif'];
           if (!in_array($imageFileType, $allowed_extensions)) {
-              echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+            $this->content .= "<p style='color: red;'>Sorry, only JPG, JPEG, PNG & GIF files are allowed.</p>";
           } else {
-              if (move_uploaded_file($_FILES["user_image"]["tmp_name"], $target_file)) {
-                echo "<img width='300' height='300' src='$target_file' /><br>";
-                  echo"<h2>$this->fullname</h2>";
-              } else {
-                  echo "Error moving file to uploads directory.";
-              }
+            if (move_uploaded_file($_FILES["user_image"]["tmp_name"], $target_file)) {
+              $this->content .= "<p>Image moved to: $target_file</p>";
+              $fullUrl = "http://" . $_SERVER['HTTP_HOST'] . "/" . $target_file;
+              $this->content .= "<img width='300' height='300' src='$fullUrl' /><br>";
+              $this->content .= "<h2>$this->fullname</h2>";
+            } else {
+              $this->content .= "<p style='color:red;'>Error moving file. Check folder permissions and path.</p>";
+            }
+            
           }
       } else {
-          echo "No file uploaded or an error occurred.";
+        $this->content .= "<p style='color: red;'>No file uploaded.</p>";
       }
     }
   }
@@ -88,54 +93,54 @@ class Form {
             ];
           }
           else {
-            echo "<p style='color: red;'>Marks for $subject must be between 0 and 100. You entered: $mark</p>";
+            $this->content .= "<p style='color: red;'>Marks for $subject must be between 0 and 100. You entered: $mark</p>";
             return;
           }
         }
         else {
-          echo "<p style='color: red;'>Invalid format: $line (Correct format: Subject|Marks)</p>";
+          $this->content .= "<p style='color: red;'>Invalid format: $line (Correct format: Subject|Marks)</p>";
           return;
         }
       }
     }
 
     if (!empty($this->marksArray)) {
-      echo "<h2>Your Marks:</h2>";
-      echo "<table border='1' style='border-collapse: collapse; width: 50%; text-align: left;'>";
-      echo "<tr><th>Subject</th><th>Marks</th></tr>";
+      $this->content .= "<h2>Your Marks:</h2>";
+      $this->content .= "<table border='1' style='border-collapse: collapse; width: 50%; text-align: left;'>";
+      $this->content .= "<tr><th>Subject</th><th>Marks</th></tr>";
 
       foreach ($this->marksArray as $entry) {
-        echo "<tr>";
-        echo "<td>" . htmlspecialchars($entry['subject']) . "</td>";
-        echo "<td>" . htmlspecialchars($entry['mark']) . "</td>";
-        echo "</tr>";
+        $this->content .= "<tr>";
+        $this->content .= "<td>" . htmlspecialchars($entry['subject']) . "</td>";
+        $this->content .= "<td>" . htmlspecialchars($entry['mark']) . "</td>";
+        $this->content .= "</tr>";
       }
 
-      echo "</table>";
+      $this->content .= "</table>";
     }
     else {
-      echo "<p style='color: red;'>No valid marks provided.</p>";
+      $this->content .= "<p style='color: red;'>No valid marks provided.</p>";
     }
   }
   public function phonenoValidation() {
     if(empty($_POST['phone_no'])){
-    echo "First fill the phone no";
+      $this->content .= "First fill the phone no";
     }elseif(!preg_match('/^\+91\s?[6-9]\d{9}$/', $_POST['phone_no'])){
-    echo "Invalid phone no enter the no which starts with +91 and must contain 10 digits";
+      $this->content .= "Invalid phone no enter the no which starts with +91 and must contain 10 digits";
     }
     else{
     $this->phone_no=$this->testInput($_POST['phone_no']);
-    echo "<p>The phone no is: " .$this->phone_no. "<br></p>"; 
+    $this->content .= "<p>The phone no is: " .$this->phone_no. "<br></p>"; 
     }
   }
   public function validateEmailSyntax($email) {
     if (empty($email)) {
-        echo "Email field is required.<br>";
+      $this->content .= "Email field is required.<br>";
         return false;
     }
 
     elseif (!preg_match("/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/", $email)) {
-        echo "Invalid email format.<br>";
+      $this->content .= "Invalid email format.<br>";
         return false;
     }
     else {
@@ -147,7 +152,7 @@ class Form {
 
         $json = curl_exec($ch);
         if ($json === false) {
-            echo "<p style='color: red;'>API request failed: " . curl_error($ch) . "</p>";
+          $this->content .= "<p style='color: red;'>API request failed: " . curl_error($ch) . "</p>";
             curl_close($ch);
             return;
         }
@@ -155,25 +160,48 @@ class Form {
 
         $validationResult = json_decode($json, true);
         if (!$validationResult || !isset($validationResult['mx_found'])) {
-            echo "<p style='color: red;'>API response error.</p>";
+          $this->content .= "<p style='color: red;'>API response error.</p>";
             return;
         }
 
         if (!$validationResult['mx_found']) {
-            echo "<p style='color: red;'>Correct syntax but invalid email</p>";
+          $this->content .= "<p style='color: red;'>Correct syntax but invalid email</p>";
         } else {
           $this->email = $emailAddress;
-          echo '<p style="color: red;">Your Email is valid</p>';
-          echo "<p>Email entered: " . $this->email . "</p>"; 
+          $this->content .= '<p style="color: red;">Your Email is valid</p>';
+          $this->content .= "<p>Email entered: " . $this->email . "</p>"; 
       }
     }
-}
-}
-  if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $formdata = new Form();
-    $formdata->imageValidation();
-    $formdata->marksValidation();
-    $formdata->phonenoValidation();
-    $formdata->validateEmailSyntax($_POST['email'] ?? '');
   }
+  public function printContent() {
+    $uploadsDir = "uploads";
+    if (!is_dir($uploadsDir)) {
+      mkdir($uploadsDir, 0777, true); 
+    }
+    $safeName = str_replace(' ', '_', $this->fullname);
+    $serverFileName = "$uploadsDir/{$safeName}.doc";
+    $this->file_name = fopen($serverFileName, "w") or die("Unable to open file: $serverFileName");
+    fwrite($this->file_name, $this->content);
+    fclose($this->file_name);
+    echo $this->content;
+  }
+  
+  
+
+}
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  $formdata = new Form();
+  $formdata->imageValidation();
+  $formdata->marksValidation();
+  $formdata->phonenoValidation();
+  $formdata->validateEmailSyntax($_POST['email'] ?? '');
+
+  header("Content-type: application/vnd.ms-word");
+  header("Content-Disposition: attachment;Filename=form-data.doc");
+  header("Pragma: no-cache");
+  header("Expires: 0");
+
+  $formdata->printContent(); // after headers
+}
+
 ?>
