@@ -3,6 +3,8 @@ class Form {
   public $fname;
   public $lname;
   public $fullname;
+  public $marksInput;    
+  public $marksArray = [];
   public $phone_no;
   public function __construct() {
     if (empty($_POST['fname'])) {
