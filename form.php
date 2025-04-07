@@ -3,6 +3,8 @@ class Form {
   public $fname;
   public $lname;
   public $fullname;
+  public $marksInput;    
+  public $marksArray = [];
   public function __construct() {
     if (empty($_POST['fname'])) {
       echo "Enter First Name<br>";
