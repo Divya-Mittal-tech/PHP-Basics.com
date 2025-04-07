@@ -124,11 +124,52 @@ class Form {
     echo "<p>The phone no is: " .$this->phone_no. "<br></p>"; 
     }
   }
+  public function validateEmailSyntax($email) {
+    if (empty($email)) {
+        echo "Email field is required.<br>";
+        return false;
+    }
+
+    elseif (!preg_match("/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/", $email)) {
+        echo "Invalid email format.<br>";
+        return false;
+    }
+    else {
+        $accessKey = '83d582bd26393fe77e01a257f6fff341';
+        $emailAddress = $this->testInput($email);
+
+        $ch = curl_init('https://apilayer.net/api/check?access_key=' . $accessKey . '&email=' . urlencode($emailAddress));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $json = curl_exec($ch);
+        if ($json === false) {
+            echo "<p style='color: red;'>API request failed: " . curl_error($ch) . "</p>";
+            curl_close($ch);
+            return;
+        }
+        curl_close($ch);
+
+        $validationResult = json_decode($json, true);
+        if (!$validationResult || !isset($validationResult['mx_found'])) {
+            echo "<p style='color: red;'>API response error.</p>";
+            return;
+        }
+
+        if (!$validationResult['mx_found']) {
+            echo "<p style='color: red;'>Correct syntax but invalid email</p>";
+        } else {
+          $this->email = $emailAddress;
+          echo '<p style="color: red;">Your Email is valid</p>';
+          echo "<p>Email entered: " . $this->email . "</p>"; 
+      }
+    }
+}
 }
   if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $formdata = new Form();
     $formdata->imageValidation();
     $formdata->marksValidation();
     $formdata->phonenoValidation();
+    $formdata->validateEmailSyntax($_POST['email'] ?? '');
   }
 ?>

@@ -29,7 +29,11 @@
     <label for="phone_no">Phone No.</label>
     <input type="tel" placeholder="+91 **********" name="phone_no" id="phone_no">
     <span class="error" style="color: red">* Required</span>
-    <br></br> 
+    <br></br>
+    <label for="email">Email:</label>
+    <input type="text" name="email" id="email">
+    <span class="error" style="color: red">* Required</span>
+    <br><br> 
     <button type="submit" name="submit">Submit</button>
     </form>
 </body>
