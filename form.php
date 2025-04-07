@@ -4,6 +4,9 @@ class Form {
   public $lname;
   public $fullname;
   public $email;
+  public $marksInput;    
+  public $marksArray = [];
+  public $phone_no;
   public function __construct() {
     if (empty($_POST['fname'])) {
       echo "Enter First Name<br>";
