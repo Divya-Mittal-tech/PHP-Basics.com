@@ -48,7 +48,7 @@ class Form {
           $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
   
           
-          
+
           $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif'];
           if (!in_array($imageFileType, $allowed_extensions)) {
               echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
@@ -65,9 +65,58 @@ class Form {
       }
     }
   }
+  public function marksValidation() {
+    if (!empty($_POST['marks'])) {
+      $this->marksInput = $_POST['marks'];
+      $lines = explode("\n", trim($this->marksInput));
+
+      foreach ($lines as $line) {
+        $line = trim($line);
+        if (preg_match("/^[a-zA-Z\s]+\|[0-9]+$/", $line)) {
+          list($subject, $mark) = explode('|', $line);
+          $mark = (int) $mark;
+
+          // Validate marks range.
+          if ($mark <= 100) {
+            $this->marksArray[] = [
+              'subject' => $subject,
+              'mark' => $mark,
+            ];
+          }
+          else {
+            echo "<p style='color: red;'>Marks for $subject must be between 0 and 100. You entered: $mark</p>";
+            return;
+          }
+        }
+        else {
+          echo "<p style='color: red;'>Invalid format: $line (Correct format: Subject|Marks)</p>";
+          return;
+        }
+      }
+    }
+
+    if (!empty($this->marksArray)) {
+      echo "<h2>Your Marks:</h2>";
+      echo "<table border='1' style='border-collapse: collapse; width: 50%; text-align: left;'>";
+      echo "<tr><th>Subject</th><th>Marks</th></tr>";
+
+      foreach ($this->marksArray as $entry) {
+        echo "<tr>";
+        echo "<td>" . htmlspecialchars($entry['subject']) . "</td>";
+        echo "<td>" . htmlspecialchars($entry['mark']) . "</td>";
+        echo "</tr>";
+      }
+
+      echo "</table>";
+    }
+    else {
+      echo "<p style='color: red;'>No valid marks provided.</p>";
+    }
+  }
 }
   if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $formdata = new Form();
     $formdata->imageValidation();
+    $formdata->marksValidation();
   }
 ?>

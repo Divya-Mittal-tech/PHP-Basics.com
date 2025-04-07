@@ -22,6 +22,10 @@
     <label for="user_image">Upload Image: </label>
     <input type="file" name="user_image" id="user_image"><span class="error" style="color: red">* Required</span>
     <br><br>
+    <label for="marks">Subject Marks (Subject|marks): </label>
+    <br>
+    <textarea name="marks" id="marks" rows="5" cols="25"></textarea>
+    <br><br>
     <button type="submit" name="submit">Submit</button>
     </form>
 </body>
