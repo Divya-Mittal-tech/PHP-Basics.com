@@ -113,10 +113,22 @@ class Form {
       echo "<p style='color: red;'>No valid marks provided.</p>";
     }
   }
+  public function phonenoValidation() {
+    if(empty($_POST['phone_no'])){
+    echo "First fill the phone no";
+    }elseif(!preg_match('/^\+91\s?[6-9]\d{9}$/', $_POST['phone_no'])){
+    echo "Invalid phone no enter the no which starts with +91 and must contain 10 digits";
+    }
+    else{
+    $this->phone_no=$this->testInput($_POST['phone_no']);
+    echo "<p>The phone no is: " .$this->phone_no. "<br></p>"; 
+    }
+  }
 }
   if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $formdata = new Form();
     $formdata->imageValidation();
     $formdata->marksValidation();
+    $formdata->phonenoValidation();
   }
 ?>
