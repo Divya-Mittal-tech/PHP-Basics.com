@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Task-1</title>
+  <title>Task-2</title>
 </head>
 <body>
   <h1>Fill the form</h1>
@@ -20,6 +20,9 @@
     <label for="fullname">Full Name: </label>
     <input type="text" name="fullname" id="fullname" readonly>
     <br></br>
+    <label for="user_image">Upload Image: </label>
+    <input type="file" name="user_image" id="user_image"><span class="error" style="color: red">* Required</span>
+    <br><br>
     <button type="submit" name="submit">Submit</button>
     </form>
 </body>
