@@ -191,17 +191,46 @@ class Form {
 }
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $formdata = new Form();
-  $formdata->imageValidation();
-  $formdata->marksValidation();
-  $formdata->phonenoValidation();
-  $formdata->validateEmailSyntax($_POST['email'] ?? '');
-
-  header("Content-type: application/vnd.ms-word");
-  header("Content-Disposition: attachment;Filename=form-data.doc");
-  header("Pragma: no-cache");
-  header("Expires: 0");
-
-  $formdata->printContent(); // after headers
+  switch ($_GET['q']) {
+    case 1:
+      echo $formdata->content;
+      break;
+    case 2:
+      $formdata->imageValidation();
+      echo $formdata->content;
+      break;
+    case 3:
+      $formdata->imageValidation();
+      $formdata->marksValidation();
+      echo $formdata->content;
+      break;
+    case 4:
+      $formdata->imageValidation();
+      $formdata->marksValidation();
+      $formdata->phonenoValidation();
+      echo $formdata->content;
+      break;
+    case 5:
+      $formdata->imageValidation();
+      $formdata->marksValidation();
+      $formdata->phonenoValidation();
+      $formdata->validateEmailSyntax();
+      echo $formdata->content;
+      break;
+    case 6:
+      $formdata->imageValidation();
+      $formdata->marksValidation();
+      $formdata->phonenoValidation();
+      $formdata->validateEmailSyntax();
+      $formdata->printContent();
+      header("Content-type: application/vnd.ms-word");
+      header("Content-Disposition: attachment;Filename=form-data.doc");
+      header("Pragma: no-cache");
+      header("Expires: 0");
+      break;
+    default:
+      echo "<h1>Error</h1>";
+  }
 }
 
 ?>
