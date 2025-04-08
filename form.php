@@ -27,7 +27,6 @@ class Form {
       $this->content .= '<p style="color: red;">Last name can only contain letters!</p>';
     }
     else {
-      // Initialize last name after data cleaning.
       $this->lname = $this->testInput($_POST['lname']);
     }
 
