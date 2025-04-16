@@ -68,6 +68,7 @@ class Form {
       }
     }
   }
+  // marksValidation function 
   public function marksValidation() {
     if (!empty($_POST['marks'])) {
       $this->marksInput = $_POST['marks'];
@@ -97,7 +98,7 @@ class Form {
         }
       }
     }
-
+    // to display marks in the form of table
     if (!empty($this->marksArray)) {
       echo "<h2>Your Marks:</h2>";
       echo "<table border='1' style='border-collapse: collapse; width: 50%; text-align: left;'>";
@@ -130,7 +131,9 @@ class Form {
 }
   if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $formdata = new Form();
+    // imageValidation function called
     $formdata->imageValidation();
+    //  marksValidation function called
     $formdata->marksValidation();
     $formdata->phonenoValidation();
   }
