@@ -1,3 +1,4 @@
+// to combine fname & lame to get fullname 
 $(document).ready(function() {
   $('#fname, #lname').on("input", function() {
     var fname = $('#fname').val().trim(); 

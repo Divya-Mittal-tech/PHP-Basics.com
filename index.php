@@ -1,3 +1,4 @@
+<!-- Form which user fills -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,6 +23,8 @@
     <button type="submit" name="submit">Submit</button>
     </form>
 </body>
-</html>
+</html>'
+<!-- added form.php file -->
 <?php require 'form.php';?>
+<!-- added js file -->
 <script src="index.js"></script>
