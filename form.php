@@ -42,8 +42,10 @@ class Form {
     $data = htmlspecialchars($data);
     return $data;
   }
+  // imageValidation function to store image
   public function imageValidation() {
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
+      // file uploaded
       if (isset($_FILES['user_image']) && $_FILES['user_image']['error'] === 0) {
           $target_dir = "uploads/";  
           if (!is_dir($target_dir)) {
@@ -52,13 +54,12 @@ class Form {
   
           $target_file = $target_dir . basename($_FILES["user_image"]["name"]);
           $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-  
-          
-          
+          // file etension is cheked 
           $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif'];
           if (!in_array($imageFileType, $allowed_extensions)) {
               echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
           } else {
+            // to display image if uploaded  
               if (move_uploaded_file($_FILES["user_image"]["tmp_name"], $target_file)) {
                 echo "<img width='300' height='300' src='$target_file' /><br>";
                   echo"<h2>$this->fullname</h2>";
@@ -66,6 +67,7 @@ class Form {
                   echo "Error moving file to uploads directory.";
               }
           }
+          // error if no file is uploaded
       } else {
           echo "No file uploaded or an error occurred.";
       }
@@ -75,6 +77,7 @@ class Form {
   // to check method is post
   if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $formdata = new Form();
+    // imageValidation function called
     $formdata->imageValidation();
   }
 ?>
