@@ -59,19 +59,20 @@ class Form {
           // file etension is cheked 
           $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif'];
           if (!in_array($imageFileType, $allowed_extensions)) {
-              echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+              echo '<div class="output">Sorry, only JPG, JPEG, PNG & GIF files are allowed.</div>';
           } else {
             // to display image if uploaded  
               if (move_uploaded_file($_FILES["user_image"]["tmp_name"], $target_file)) {
-                echo "<img width='300' height='300' src='$target_file' /><br>";
-                  echo"<h2>$this->fullname</h2>";
+                echo '<div class="output"><img width="300" height="300" src="' . $target_file . '" /></div><br>';
+                echo '<div class="output"><h2>' . $this->fullname . '</h2></div>';
+
               } else {
-                  echo "Error moving file to uploads directory.";
+                  echo '<div class="output">Error moving file to uploads directory.</div>';
               }
           }
           // error if no file is uploaded
       } else {
-          echo "No file uploaded or an error occurred.";
+          echo '<div class="output">file uploaded or an error occurred.</div>';
       }
     }
   }
