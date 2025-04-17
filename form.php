@@ -7,11 +7,12 @@ class Form {
   public function __construct() {
     // if fname filled is empty 
     if (empty($_POST['fname'])) {
-      echo "Enter First Name<br>";
+      echo '<div class="output">Enter First Name</div><br>';
+
     }
     // to check fname contain alphabets
     elseif (!preg_match('/^[a-zA-Z]+$/', $_POST['fname'])) {
-      echo "First name can only contain letters!<br>";
+      echo '<div class="output">First name can only contain letters!</div><br>';
     }
     else {
       // Initialize first name after data cleaning.
@@ -19,11 +20,11 @@ class Form {
     }
     // if lname filled is empty 
     if (empty($_POST['lname'])) {
-      echo "Enter Last Name<br>";
+      echo '<div class="output">Enter Last Name</div><br>';
     }
     // to check lname contain alphabets
     elseif (!preg_match('/^[a-zA-Z]+$/', $_POST['lname'])) {
-      echo "Last name can only contain letters!<br>";
+      echo '<div class="output">Last name can only contain letters!</div><br>';
     }
     else {
       // Initialize last name after data cleaning.
@@ -32,7 +33,8 @@ class Form {
     // concatenate fname & lname to get fullname
     if (!empty($this->fname) && !empty($this->lname)) {
       $this->fullname = $this->fname . ' ' . $this->lname;
-      echo '<h1>Hello ' . $this->fullname . '!</h1><br>';
+      echo '<div class="output"><h1>Hello ' . $this->fullname . '!</h1></div><br>';
+
     }
   }
   // function testIput
