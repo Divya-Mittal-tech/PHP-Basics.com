@@ -5,7 +5,6 @@ class Form {
   public $fullname;
   public $marksInput;    
   public $marksArray = [];
-  public $phone_no;
   // constructor
   public function __construct() {
     // if fname filled is empty 
@@ -79,107 +78,83 @@ class Form {
       }
     }
   }
-  // marksValidation function 
   public function marksValidation() {
     if (!empty($_POST['marks'])) {
       $this->marksInput = $_POST['marks'];
       $lines = explode("\n", trim($this->marksInput));
-
+  
       foreach ($lines as $line) {
         $line = trim($line);
         if (preg_match("/^[a-zA-Z\s]+\|[0-9]+$/", $line)) {
           list($subject, $mark) = explode('|', $line);
           $mark = (int) $mark;
-
-          // Validate marks range.
+  
+          // Remove all spaces from subject
+          $subject = preg_replace('/\s+/', '', trim($subject));
+  
           if ($mark <= 100) {
             $this->marksArray[] = [
               'subject' => $subject,
               'mark' => $mark,
             ];
-          }
-          else {
+          } else {
             echo "<p style='color: red;'>Marks for $subject must be between 0 and 100. You entered: $mark</p>";
             return;
           }
-        }
-        else {
+        } else {
           echo "<p style='color: red;'>Invalid format: $line (Correct format: Subject|Marks)</p>";
           return;
         }
       }
     }
-    // to display marks in the form of table
+  
     if (!empty($this->marksArray)) {
       echo "<h2>Your Marks:</h2>";
       echo "<table border='1' style='border-collapse: collapse; width: 50%; text-align: left;'>";
       echo "<tr><th>Subject</th><th>Marks</th></tr>";
-
+  
       foreach ($this->marksArray as $entry) {
         echo "<tr>";
         echo "<td>" . htmlspecialchars($entry['subject']) . "</td>";
         echo "<td>" . htmlspecialchars($entry['mark']) . "</td>";
         echo "</tr>";
       }
-
-      echo "</table>";
-    }
-    else {
-      echo "<p style='color: red;'>No valid marks provided.</p>";
-    }
-  }
-  public function phoneValidation() {
-    if (!empty($_POST['phones'])) {
-      $this->phonesInput = $_POST['phones'];
-      $lines = explode("\n", trim($this->phonesInput));
-  
-      foreach ($lines as $line) {
-        $line = trim($line);
-        if (preg_match("/^[a-zA-Z\s]+\|[0-9]{10}$/", $line)) {
-          list($name, $phone) = explode('|', $line);
-          $name = preg_replace('/\s+/', '', trim($name));
-  
-          // Automatically prefix 91
-          $fullPhone = '91' . $phone;
-  
-          $this->phonesArray[] = [
-            'name' => $name,
-            'phone' => $fullPhone,
-          ];
-        } else {
-          echo "<p style='color: red;'>Invalid format: $line (Correct format: Name|10-digit-phone)</p>";
-          return;
-        }
-      }
-    }
-  
-    if (!empty($this->phonesArray)) {
-      echo "<h2>Phone Numbers:</h2>";
-      echo "<table border='1' style='border-collapse: collapse; width: 50%; text-align: left;'>";
-      echo "<tr><th>Name</th><th>Phone Number</th></tr>";
-  
-      foreach ($this->phonesArray as $entry) {
-        echo "<tr>";
-        echo "<td>" . htmlspecialchars($entry['name']) . "</td>";
-        echo "<td>+" . htmlspecialchars($entry['phone']) . "</td>";
-        echo "</tr>";
-      }
   
       echo "</table>";
     } else {
-      echo "<p style='color: red;'>No valid phone numbers provided.</p>";
+      echo "<p style='color: red;'>No valid marks provided.</p>";
+    }
+  }
+  public function phonenoValidation() {
+    if (empty($_POST['phone_no'])) {
+      echo "First fill the phone no";
+    } else {
+      $input = preg_replace('/\s+/', '', $_POST['phone_no']); // remove any spaces
+  
+      // If number is exactly 10 digits, prefix +91
+      if (preg_match('/^[6-9]\d{9}$/', $input)) {
+        $input = '+91' . $input;
+      }
+  
+      // Final validation
+      if (!preg_match('/^\+91[6-9]\d{9}$/', $input)) {
+        echo "Invalid phone no. Enter a 10-digit number starting with 6-9 or +91 format.";
+      } else {
+        $this->phone_no = $this->testInput($input);
+        echo "<p>The phone no is: " . $this->phone_no . "<br></p>"; 
+      }
     }
   }
   
 }
+
   // to check method is post
   if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $formdata = new Form();
+    // marksValidation function called
+    $formdata->marksValidation();
     // imageValidation function called
     $formdata->imageValidation();
-    //  marksValidation function called
-    $formdata->marksValidation();
-    // phoneValidation function called
     $formdata->phonenoValidation();
   }
 ?>
