@@ -128,17 +128,49 @@ class Form {
       echo "<p style='color: red;'>No valid marks provided.</p>";
     }
   }
-  public function phonenoValidation() {
-    if(empty($_POST['phone_no'])){
-    echo "First fill the phone no";
-    }elseif(!preg_match('/^\+91\s?[6-9]\d{9}$/', $_POST['phone_no'])){
-    echo "Invalid phone no enter the no which starts with +91 and must contain 10 digits";
+  public function phoneValidation() {
+    if (!empty($_POST['phones'])) {
+      $this->phonesInput = $_POST['phones'];
+      $lines = explode("\n", trim($this->phonesInput));
+  
+      foreach ($lines as $line) {
+        $line = trim($line);
+        if (preg_match("/^[a-zA-Z\s]+\|[0-9]{10}$/", $line)) {
+          list($name, $phone) = explode('|', $line);
+          $name = preg_replace('/\s+/', '', trim($name));
+  
+          // Automatically prefix 91
+          $fullPhone = '91' . $phone;
+  
+          $this->phonesArray[] = [
+            'name' => $name,
+            'phone' => $fullPhone,
+          ];
+        } else {
+          echo "<p style='color: red;'>Invalid format: $line (Correct format: Name|10-digit-phone)</p>";
+          return;
+        }
+      }
     }
-    else{
-    $this->phone_no=$this->testInput($_POST['phone_no']);
-    echo "<p>The phone no is: " .$this->phone_no. "<br></p>"; 
+  
+    if (!empty($this->phonesArray)) {
+      echo "<h2>Phone Numbers:</h2>";
+      echo "<table border='1' style='border-collapse: collapse; width: 50%; text-align: left;'>";
+      echo "<tr><th>Name</th><th>Phone Number</th></tr>";
+  
+      foreach ($this->phonesArray as $entry) {
+        echo "<tr>";
+        echo "<td>" . htmlspecialchars($entry['name']) . "</td>";
+        echo "<td>+" . htmlspecialchars($entry['phone']) . "</td>";
+        echo "</tr>";
+      }
+  
+      echo "</table>";
+    } else {
+      echo "<p style='color: red;'>No valid phone numbers provided.</p>";
     }
   }
+  
 }
   // to check method is post
   if ($_SERVER['REQUEST_METHOD'] === 'POST') {
