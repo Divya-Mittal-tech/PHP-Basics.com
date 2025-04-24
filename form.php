@@ -148,44 +148,51 @@ class Form {
   }
   public function validateEmailSyntax($email) {
     if (empty($email)) {
-        echo "Email field is required.<br>";
+        echo "<p style='color: red;'>Email field is required.</p>";
         return false;
     }
 
-    elseif (!preg_match("/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/", $email)) {
-        echo "Invalid email format.<br>";
+    // Validate email syntax
+    if (!preg_match("/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/", $email)) {
+        echo "<p style='color: red;'>Invalid email format.</p>";
         return false;
     }
-    else {
-        $accessKey = '83d582bd26393fe77e01a257f6fff341';
-        $emailAddress = $this->testInput($email);
 
-        $ch = curl_init('https://apilayer.net/api/check?access_key=' . $accessKey . '&email=' . urlencode($emailAddress));
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    // Clean input
+    $emailAddress = $this->testInput($email);
+    $accessKey = '83d582bd26393fe77e01a257f6fff341';
 
-        $json = curl_exec($ch);
-        if ($json === false) {
-            echo "<p style='color: red;'>API request failed: " . curl_error($ch) . "</p>";
-            curl_close($ch);
-            return;
-        }
+    // Initialize cURL
+    $ch = curl_init("https://apilayer.net/api/check?access_key=$accessKey&email=" . urlencode($emailAddress) . "&smtp=1");
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    $json = curl_exec($ch);
+    if ($json === false) {
+        echo "<p style='color: red;'>API request failed: " . curl_error($ch) . "</p>";
         curl_close($ch);
+        return false;
+    }
+    curl_close($ch);
 
-        $validationResult = json_decode($json, true);
-        if (!$validationResult || !isset($validationResult['mx_found'])) {
-            echo "<p style='color: red;'>API response error.</p>";
-            return;
-        }
+    $validationResult = json_decode($json, true);
+    
+    if (!$validationResult || !isset($validationResult['smtp_check'])) {
+        echo "<p style='color: red;'>API response error or invalid response format.</p>";
+        return false;
+    }
 
-        if (!$validationResult['mx_found']) {
-            echo "<p style='color: red;'>Correct syntax but invalid email</p>";
-        } else {
-          $this->email = $emailAddress;
-          echo '<p style="color: red;">Your Email is valid</p>';
-          echo "<p>Email entered: " . $this->email . "</p>"; 
-      }
+    if (!$validationResult['smtp_check']) {
+        echo "<p style='color: red;'>Email syntax is correct but this email address does not exist.</p>";
+        return false;
+    } else {
+        $this->email = $emailAddress;
+        echo "<p style='color: green;'>Your Email is valid and exists.</p>";
+        echo "<p>Email entered: " . htmlspecialchars($this->email) . "</p>";
+        return true;
     }
 }
+
+
 }
 
   // to check method is post
