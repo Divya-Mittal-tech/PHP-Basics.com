@@ -78,56 +78,55 @@ class Form {
       }
     }
   }
-  // marksValidation function 
   public function marksValidation() {
     if (!empty($_POST['marks'])) {
       $this->marksInput = $_POST['marks'];
       $lines = explode("\n", trim($this->marksInput));
-
+  
       foreach ($lines as $line) {
         $line = trim($line);
         if (preg_match("/^[a-zA-Z\s]+\|[0-9]+$/", $line)) {
           list($subject, $mark) = explode('|', $line);
           $mark = (int) $mark;
-
-          // Validate marks range.
+  
+          // Remove all spaces from subject
+          $subject = preg_replace('/\s+/', '', trim($subject));
+  
           if ($mark <= 100) {
             $this->marksArray[] = [
               'subject' => $subject,
               'mark' => $mark,
             ];
-          }
-          else {
+          } else {
             echo "<p style='color: red;'>Marks for $subject must be between 0 and 100. You entered: $mark</p>";
             return;
           }
-        }
-        else {
+        } else {
           echo "<p style='color: red;'>Invalid format: $line (Correct format: Subject|Marks)</p>";
           return;
         }
       }
     }
-
+  
     if (!empty($this->marksArray)) {
       echo "<h2>Your Marks:</h2>";
       echo "<table border='1' style='border-collapse: collapse; width: 50%; text-align: left;'>";
       echo "<tr><th>Subject</th><th>Marks</th></tr>";
-
+  
       foreach ($this->marksArray as $entry) {
         echo "<tr>";
         echo "<td>" . htmlspecialchars($entry['subject']) . "</td>";
         echo "<td>" . htmlspecialchars($entry['mark']) . "</td>";
         echo "</tr>";
       }
-
+  
       echo "</table>";
-    }
-    else {
+    } else {
       echo "<p style='color: red;'>No valid marks provided.</p>";
     }
   }
 }
+  
   // to check method is post
   if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $formdata = new Form();
