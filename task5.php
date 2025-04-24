@@ -6,49 +6,143 @@ include 'check-session.php';
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <title>Task-2</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-top: 20px;
+    }
+
+    form {
+      background-color: #fff;
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="tel"],
+    input[type="file"],
+    textarea {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    .error {
+      color: red;
+      font-size: 0.9em;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    button {
+      background-color: #007bff;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .pager {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .pager a {
+      display: inline-block;
+      margin: 0 5px;
+      padding: 10px 15px;
+      text-decoration: none;
+      background-color: #ccc;
+      color: #000;
+      border-radius: 5px;
+    }
+
+    .pager a:hover {
+      background-color: #999;
+    }
+
+    .pager a:first-child {
+      background-color: black;
+      color: white;
+    }
+  </style>
 </head>
 <body>
   <h1>Fill the form</h1>
-  <form method="POST" enctype="multipart/form-data" action="<?php echo $_SERVER["PHP_SELF"];?>">
-    <label for="fname">First Name: </label>
+  <form method="POST" enctype="multipart/form-data" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+    <label for="fname">First Name:</label>
     <input type="text" name="fname" id="fname">
-    <span class="error" style="color: red">* Required</span>
-    <br></br>
-    <label for="lname">Last Name: </label>
+    <span class="error">* Required</span>
+
+    <label for="lname">Last Name:</label>
     <input type="text" name="lname" id="lname">
-    <span class="error" style="color: red">* Required</span>
-    <br></br>
-    <label for="fullname">Full Name: </label>
+    <span class="error">* Required</span>
+
+    <label for="fullname">Full Name:</label>
     <input type="text" name="fullname" id="fullname" readonly>
-    <br></br>
-    <label for="user_image">Upload Image: </label>
-    <input type="file" name="user_image" id="user_image"><span class="error" style="color: red">* Required</span>
-    <br><br>
-    <label for="marks">Subject Marks (Subject|marks): </label>
-    <br>
-    <textarea name="marks" id="marks" rows="5" cols="25"></textarea>
-    <br><br>
+
+    <label for="user_image">Upload Image:</label>
+    <input type="file" name="user_image" id="user_image">
+    <span class="error">* Required</span>
+
+    <label for="marks">Subject Marks (Subject|marks):</label>
+    <textarea name="marks" id="marks" rows="5" cols="40"></textarea>
+
     <label for="phone_no">Phone No.</label>
     <input type="tel" placeholder="+91 **********" name="phone_no" id="phone_no">
-    <span class="error" style="color: red">* Required</span>
-    <br></br>
+    <span class="error">* Required</span>
+
     <label for="email">Email:</label>
     <input type="text" name="email" id="email">
-    <span class="error" style="color: red">* Required</span>
-    <br><br> 
+    <span class="error">* Required</span>
+
     <button type="submit" name="submit">Submit</button>
-    </form>
-    <div class="pager">
-        <a style="background-color: black; color: white;" href="index.php?q=<?php echo $taskNumber = 1; ?>">Question 1</a>
-        <a href="index.php?q=<?php echo $taskNumber = 2; ?>">Question 2</a>
-        <a href="index.php?q=<?php echo $taskNumber = 3; ?>">Question 3</a>
-        <a href="index.php?q=<?php echo $taskNumber = 4; ?>">Question 4</a>
-        <a href="index.php?q=<?php echo $taskNumber = 5; ?>">Question 5</a>
-        <a href="index.php?q=<?php echo $taskNumber = 6; ?>">Question 6</a>
-        <a href="logout.php">Logout</a>
-    </div>
+  </form>
+
+  <div class="pager">
+    <a href="index.php?q=1">Question 1</a>
+    <a href="index.php?q=2">Question 2</a>
+    <a href="index.php?q=3">Question 3</a>
+    <a href="index.php?q=4">Question 4</a>
+    <a href="index.php?q=5">Question 5</a>
+    <a href="index.php?q=6">Question 6</a>
+    <a href="logout.php">Logout</a>
+  </div>
+
+  <?php require 'form.php';?>
+  <script src="index.js"></script>
 </body>
 </html>
-<?php require 'form.php';?>
-<script src="index.js"></script>

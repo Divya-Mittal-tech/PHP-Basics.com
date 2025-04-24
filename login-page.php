@@ -3,7 +3,14 @@ session_start();
 
 if ($_SESSION['logged_in'] == true) {
     // Redirect to the requested page or default to index.php with query parameter q=4
-    $redirectTo = isset($_GET['redirect']) ? $_GET['redirect'] : 'index.php?q=4';
+    $redirectTo = 'index.php?q=4'; // default
+
+if (isset($_GET['redirect'])) {
+    $redirectTo = $_GET['redirect'];
+} elseif (isset($_GET['q'])) {
+    $redirectTo = 'index.php?q=' . $_GET['q'];
+}
+
     header("Location: $redirectTo");
     exit(); // Always call exit after header redirection to stop further script execution
 }
@@ -48,8 +55,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <div class="container">
         <section>
             <h1>Login</h1>
-            <form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF'])?>">
-                <label for="username">Username:</label >
+            <form method="post" action="<?php 
+    if (isset($_GET['redirect'])) {
+        echo htmlspecialchars($_SERVER['PHP_SELF']) . '?redirect=' . urlencode($_GET['redirect']);
+    } elseif (isset($_GET['q'])) {
+        echo htmlspecialchars($_SERVER['PHP_SELF']) . '?redirect=' . urlencode('index.php?q=' . $_GET['q']);
+    } else {
+        echo htmlspecialchars($_SERVER['PHP_SELF']);
+    }
+?>">
+               <label for="username">Username:</label >
                 <input type="text" id="username" name="username" required>
                 <br><br>
                 
@@ -64,5 +79,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </section>
     </div>
 </body>
-
 </html>

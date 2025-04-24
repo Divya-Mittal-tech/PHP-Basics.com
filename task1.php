@@ -6,7 +6,97 @@ include 'check-session.php';
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <title>Task-1</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-top: 20px;
+    }
+
+    form {
+      background-color: #fff;
+      max-width: 600px;
+      margin: 30px auto;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    label {
+      font-weight: bold;
+      margin-top: 10px;
+      display: block;
+    }
+
+    input[type="text"],
+    input[type="file"],
+    textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .error {
+      color: red;
+      font-size: 0.85em;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    button {
+      background-color: #007bff;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .pager {
+      text-align: center;
+      margin-top: 40px;
+    }
+
+    .pager a {
+      display: inline-block;
+      text-decoration: none;
+      background-color: #e0e0e0;
+      padding: 10px 15px;
+      margin: 5px;
+      border-radius: 6px;
+      color: black;
+      font-weight: 500;
+    }
+
+    .pager a:hover {
+      background-color: #bdbdbd;
+    }
+
+    .pager a[href*="q=3"] {
+      background-color: black;
+      color: white;
+    }
+  </style>
 </head>
 <body>
   <h1>Fill the form</h1>
