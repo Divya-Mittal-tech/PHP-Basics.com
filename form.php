@@ -7,24 +7,24 @@ class Form {
 
   public function __construct() {
     if (empty($_POST['fname'])) {
-      $this->content .= '<p style="color: red;">Enter First Name</p>';
+      $this->content .= '<div class="output"><p style="color: red;">Enter First Name</p></div>';
     } elseif (!preg_match('/^[a-zA-Z]+$/', $_POST['fname'])) {
-      $this->content .= '<p style="color: red;">First name can only contain letters!</p>';
+      $this->content .= '<div class="output"><p style="color: red;">First name can only contain letters!</p></div>';
     } else {
       $this->fname = $this->testInput($_POST['fname']);
     }
 
     if (empty($_POST['lname'])) {
-      $this->content .= '<p style="color: red;">Enter Last Name</p>';
+      $this->content .= '<div class="output"><p style="color: red;">Enter Last Name</p></div>';
     } elseif (!preg_match('/^[a-zA-Z]+$/', $_POST['lname'])) {
-      $this->content .= '<p style="color: red;">Last name can only contain letters!</p>';
+      $this->content .= '<div class="output"><p style="color: red;">Last name can only contain letters!</p></div>';
     } else {
       $this->lname = $this->testInput($_POST['lname']);
     }
 
     if (!empty($this->fname) && !empty($this->lname)) {
       $this->fullname = $this->fname . ' ' . $this->lname;
-      $this->content .= "<h1>Hello $this->fullname!</h1>";
+      $this->content .= "<div class='output'><h1>Hello $this->fullname!</h1></div>";
     }
   }
 
@@ -41,18 +41,18 @@ class Form {
       $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
       if (!in_array($imageFileType, $allowed_extensions)) {
-        $this->content .= "<p style='color: red;'>Only JPG, JPEG, PNG & GIF files are allowed.</p>";
+        $this->content .= "<div class='output'><p style='color: red;'>Only JPG, JPEG, PNG & GIF files are allowed.</p></div>";
       } else {
         if (move_uploaded_file($_FILES["user_image"]["tmp_name"], $target_file)) {
           $fullUrl = "http://" . $_SERVER['HTTP_HOST'] . "/" . $target_file;
-          $this->content .= "<img width='300' height='300' src='$fullUrl' /><br>";
-          $this->content .= "<h2>$this->fullname</h2>";
+          $this->content .= "<div class='output'><img width='300' height='300' src='$fullUrl' /><br>";
+          $this->content .= "<h2>$this->fullname</h2></div>";
         } else {
-          $this->content .= "<p style='color:red;'>Error moving file.</p>";
+          $this->content .= "<div class='output'><p style='color:red;'>Error moving file.</p></div>";
         }
       }
     } else {
-      $this->content .= "<p style='color: red;'>No file uploaded.</p>";
+      $this->content .= "<div class='output'><p style='color: red;'>No file uploaded.</p></div>";
     }
   }
 
@@ -72,55 +72,55 @@ class Form {
           if ($mark <= 100) {
             $this->marksArray[] = ['subject' => $subject, 'mark' => $mark];
           } else {
-            $this->content .= "<p style='color: red;'>Marks for $subject must be between 0 and 100. You entered: $mark</p>";
+            $this->content .= "<div class='output'><p style='color: red;'>Marks for $subject must be between 0 and 100. You entered: $mark</p></div>";
             $valid = false;
             break;
           }
         } else {
-          $this->content .= "<p style='color: red;'>Invalid format: $line (Correct format: Subject|Marks)</p>";
+          $this->content .= "<div class='output'><p style='color: red;'>Invalid format: $line (Correct format: Subject|Marks)</p></div>";
           $valid = false;
           break;
         }
       }
 
       if ($valid && !empty($this->marksArray)) {
-        $this->content .= "<h2>Your Marks:</h2>";
+        $this->content .= "<div class='output'><h2>Your Marks:</h2>";
         $this->content .= "<table border='1' style='border-collapse: collapse; width: 50%; text-align: left;'>";
         $this->content .= "<tr><th>Subject</th><th>Marks</th></tr>";
         foreach ($this->marksArray as $entry) {
           $this->content .= "<tr><td>" . htmlspecialchars($entry['subject']) . "</td><td>" . htmlspecialchars($entry['mark']) . "</td></tr>";
         }
-        $this->content .= "</table>";
+        $this->content .= "</table></div>";
       }
     } else {
-      $this->content .= "<p style='color: red;'>No marks data provided.</p>";
+      $this->content .= "<div class='output'><p style='color: red;'>No marks data provided.</p></div>";
     }
   }
 
   public function phonenoValidation() {
     if (empty($_POST['phone_no'])) {
-      $this->content .= "<p style='color: red;'>Enter phone number.</p>";
+      $this->content .= "<div class='output'><p style='color: red;'>Enter phone number.</p></div>";
     } else {
       $input = preg_replace('/\s+/', '', $_POST['phone_no']);
       if (preg_match('/^[6-9]\d{9}$/', $input)) {
         $input = '+91' . $input;
       }
       if (!preg_match('/^\+91[6-9]\d{9}$/', $input)) {
-        $this->content .= "<p style='color: red;'>Invalid phone number.</p>";
+        $this->content .= "<div class='output'><p style='color: red;'>Invalid phone number.</p></div>";
       } else {
         $this->phone_no = $this->testInput($input);
-        $this->content .= "<p>Phone: $this->phone_no</p>";
+        $this->content .= "<div class='output'><p>Phone: $this->phone_no</p></div>";
       }
     }
   }
 
   public function validateEmailSyntax($email) {
     if (empty($email)) {
-      $this->content .= "<p style='color: red;'>Email required.</p>";
+      $this->content .= "<div class='output'><p style='color: red;'>Email required.</p></div>";
       return;
     }
     if (!preg_match("/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/", $email)) {
-      $this->content .= "<p style='color: red;'>Invalid email format.</p>";
+      $this->content .= "<div class='output'><p style='color: red;'>Invalid email format.</p></div>";
       return;
     }
 
@@ -133,12 +133,12 @@ class Form {
     $validation = json_decode($json, true);
 
     if (!$validation || !isset($validation['smtp_check'])) {
-      $this->content .= "<p style='color: red;'>API error or invalid response.</p>";
+      $this->content .= "<div class='output'><p style='color: red;'>API error or invalid response.</p></div>";
     } elseif (!$validation['smtp_check']) {
-      $this->content .= "<p style='color: red;'>Email syntax valid but address doesn't exist.</p>";
+      $this->content .= "<div class='output'><p style='color: red;'>Email syntax valid but address doesn't exist.</p></div>";
     } else {
       $this->email = $emailAddress;
-      $this->content .= "<p style='color: green;'>Email is valid and exists.</p><p>Email: $this->email</p>";
+      $this->content .= "<div class='output'><p style='color: green;'>Email is valid and exists.</p><p>Email: $this->email</p></div>";
     }
   }
 
