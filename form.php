@@ -53,7 +53,7 @@ class Form {
       }
     } else {
       $this->content .= "<p style='color: red;'>No file uploaded.</p>";
-    }
+        }
   }
 
   public function marksValidation() {
