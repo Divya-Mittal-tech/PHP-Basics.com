@@ -78,7 +78,10 @@
 }
 
 </style>
-
+<?php require 'form.php';?>
+<?php
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+?>
   <h1>Fill the form</h1>
   <form method="POST" enctype="multipart/form-data" action="<?php echo $_SERVER["PHP_SELF"];?>">
     <label for="fname">First Name: </label>
@@ -111,7 +114,8 @@
     </form>
 </body>
 </html>'
-<!-- added form.php file -->
-<?php require 'form.php';?>
+
 <!-- added js file -->
 <script src="index.js"></script>
+<?php
+}
